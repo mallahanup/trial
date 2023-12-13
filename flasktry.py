@@ -1,4 +1,3 @@
-pip install flask
 import streamlit as st
 import cv2
 
