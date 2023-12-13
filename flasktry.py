@@ -1,3 +1,50 @@
+pip install flask
+import streamlit as st
+import cv2
+
+# Load the Haarcascade Classifier for face detection
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+def main():
+    st.title('Clothing Augmentation App')
+
+    # Create buttons for different clothing options
+    shirt_option = st.selectbox('Select Shirt', ['Shirt 1', 'Shirt 2', 'Shirt 3'])  # Add your shirt options
+    pant_option = st.selectbox('Select Pant', ['Pant 1', 'Pant 2', 'Pant 3'])  # Add your pant options
+
+    if st.button('Start Camera'):
+        # Function to perform clothing augmentation
+        perform_augmentation(shirt_option, pant_option)
+
+def perform_augmentation(shirt_option, pant_option):
+    cap = cv2.VideoCapture(0)  # Access the webcam
+
+    while True:
+        ret, img = cap.read()  # Read frame from the camera
+
+        # Perform face detection
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+
+        for (x, y, w, h) in faces:
+            # Your clothing augmentation logic here based on the selected options
+            # Use OpenCV to overlay shirt and pant on the detected face region
+
+            # Example: Drawing a rectangle around the detected face
+            cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+
+        # Display the augmented frame
+        cv2.imshow('Augmented Frame', img)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    main()
+
 from flask import Flask, render_template, request
 import json
 from flask_cors import CORS
